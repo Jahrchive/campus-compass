@@ -1,11 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta charset="utf-8">
+    <title>NCST Campus Map</title>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.14.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.14.0/mapbox-gl.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+
+        }
+
+        #map {
+            position: absolute;
+            top: 0px;
+            bottom: 0;
+            width: 100%;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Style for the header/navigation bar */
+        .navbar {
+            background-color: #001b4d;
+            color: #ffe70d;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        /* Logo styling */
+        .navbar .logo {
+            color: #ffe70d;
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
+    <header class="navbar">
+        <a class="logo">NCST Campus Map</a>
+    </header>
+
     
+
+    <div id="map"></div>
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1IjoiYnJlbnRhc3VuY2lvbiIsImEiOiJjbWV4dWR5ZWEwbDE2Mm5zYW1yMWg3amp1In0.JrwmW2zsAaJ8Vcf_YgHyeQ';
+        const map = new mapboxgl.Map({
+            container: 'map', // container ID
+            center: [120.941242, 14.327845], // starting position [lng, lat]. Note that lat must be set between -90 and 90
+            zoom: 17 // starting zoom
+        });
+
+        const popup = new mapboxgl.Popup({ offset: 25 }).setText(
+            'National College of Science and technology');
+
+        new mapboxgl.Marker({ color: '#ffe70d' })
+            .setLngLat([120.940784, 14.327308])
+            .setPopup(popup)
+            .addTo(map);
+
+        map.on('load', () => {
+            
+            map.setFog({});
+
+            map.addSource('campus-data', {
+            type: 'geojson',
+            data: './dataset/campus-compass.geojson' // relative path
+        });
+
+        // Example: Fill layer (if polygons)
+         
+        map.addLayer({
+            id: 'campus-fill',
+            type: 'fill',
+            source: 'campus-data',
+            paint: {
+                'fill-color': '#ffe70d',
+                'fill-opacity': 0.5
+            }
+        });
+
+        // Example: Line layer (if you have line features)
+      map.addLayer({
+            id: 'campus-outline',
+            type: 'line',
+            source: 'campus-data',
+            paint: {
+                'line-color': '#001b4d',
+                'line-width': 2
+            }
+        });  
+        
+        
+    });
+
+    </script>
+
 </body>
+
 </html>
